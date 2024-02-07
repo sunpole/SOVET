@@ -1,0 +1,85 @@
+/* styles.css */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 10vh;
+  background-color: #f0f0f0;
+}
+
+button {
+  width: 30%;
+  height: 100%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.single-generation-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.auto-generation-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.speedy-generation-button {
+  background-color: #8bc34a;
+  color: white;
+}
+
+.stop-auto-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.output-window {
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+#generatedNumberDisplay {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.tables-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 49%;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+#totalGenerationsRow {
+  background-color: #ffeb3b;
+  font-weight: bold;
+}
+#superFastButton {
+  background-color: #ff9800;
+  color: white;
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Див-блок с кнопками и аудио</title>
+    <style>
+        body {
+            background-color: #d3d3d3; /* Светло-серый фон */
+            font-family: Arial, sans-serif;
+        }
+
+        #colorBlock {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100px;
+            height: 200px;
+            gap: 5px;
+            max-width: 100px; /* Ширина трех рядов по 3 кнопки в каждом */
+            margin: 0 auto;
+            padding: 5px;
+        }
+
+.button {
+    width: calc(30% - 5px); /* Ширина 30% минус промежуток */
+    height: 30%;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border 0.3s, color 0.3s;
+    text-align: center;
+    font-weight: bold;
+    font-size: 9px;
+    line-height: 30%;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-color: transparent;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+        .brown { background-color: #3E2723; }
+        .blue { background-color: #1A237E; }
+        .orange { background-color: #E64A19; }
+        .red { background-color: #F50057; }
+        .yellow { background-color: #FFEA00; }
+        .light-blue { background-color: #2196F3; }
+        .green { background-color: #2E7D32; }
+        .lime { background-color: #C6FF00; }
+        .gold { background-color: #cc9934; }
+
+        .playing {
+            background-color: #FFD700;
+            border-color: #FFD700;
+            color: #1e1d1b;
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="colorBlock">
+        <div class="button brown" onclick="playAudio('audioBrown', 'brown')">90</div>
+        <div class="button blue" onclick="playAudio('audioBlue', 'blue')">120</div>
+        <div class="button orange" onclick="playAudio('audioOrange', 'orange')">90</div>
+        <div class="button red" onclick="playAudio('audioRed', 'red')">120</div>
+        <div class="button yellow" onclick="playAudio('audioYellow', 'yellow')">90</div>
+        <div class="button light-blue" onclick="playAudio('audioLightBlue', 'light-blue')">120</div>
+        <div class="button green" onclick="playAudio('audioGreen', 'green')">90</div>
+        <div class="button lime" onclick="playAudio('audioLime', 'lime')">120</div>
+        <div class="button gold" onclick="playAudio('audioGold', 'gold')">90</div>
+    </div>
+
+    <script>
+        let currentAudio;
+        let currentInterval;
+
+        function playAudio(audioId, color) {
+            const audioElement = document.getElementById(audioId);
+            const buttons = document.querySelectorAll('.button');
+
+            buttons.forEach(button => {
+                button.textContent = '';
+                button.classList.remove('playing');
+            });
+
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                clearInterval(currentInterval);
+                currentAudio = null;
+            }
+
+            const button = document.querySelector(`.button.${color}`);
+            audioElement.currentTime = 0;
+            audioElement.play();
+            button.classList.add('playing');
+
+            let duration = Math.ceil(audioElement.duration);
+            button.textContent = duration;
+
+            currentInterval = setInterval(() => {
+                duration--;
+
+                if (duration <= 0) {
+                    clearInterval(currentInterval);
+                    button.textContent = '';
+                    button.classList.remove('playing');
+                } else {
+                    button.textContent = duration;
+                }
+            }, 1000);
+
+            currentAudio = audioElement;
+            currentAudio.addEventListener('ended', () => {
+                clearInterval(currentInterval);
+                button.textContent = '';
+                button.classList.remove('playing');
+            });
+        }
+    </script>
+
+    <audio id="audioBrown" src="brown.mp3"></audio>
+    <audio id="audioBlue" src="blue.mp3"></audio>
+    <audio id="audioOrange" src="orange.mp3"></audio>
+    <audio id="audioRed" src="red.mp3"></audio>
+    <audio id="audioYellow" src="yellow.mp3"></audio>
+    <audio id="audioLightBlue" src="lightblue.mp3"></audio>
+    <audio id="audioGreen" src="green.mp3"></audio>
+    <audio id="audioLime" src="lime.mp3"></audio>
+    <audio id="audioGold" src="gold.mp3"></audio>
+</body>
+
+</html>

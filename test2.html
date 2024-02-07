@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Probability Generator</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Подключение к основным скриптам -->
+<script type="text/javascript" src="randomGenerator.js"></script>
+
+  <script type="text/javascript" src="statisticsUpdater.js"></script>
+  <script type="text/javascript" src="nextNumberPredictor.js"></script>
+  <script type="text/javascript" src="generationController.js"></script>
+  <script type="text/javascript" src="mainButtonsLogic.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+
+</head>
+<body>
+
+<div class="button-container">
+<button id="single-generation-button" onclick="generateSingle()">Разовая генерация</button>
+  <button class="auto-generation-button" onclick="startAutoGeneration(1)">1/1 сек</button>
+  <button class="speedy-generation-button" onclick="startAutoGeneration(100)">100/1 сек</button>
+  <button id="stop-auto-button" onclick="stopGeneration()">Стоп авто</button>
+  <button id="superFastButton" onclick="toggleSuperFast()">Toggle Super Fast</button>
+</div>
+
+<div class="output-window">
+  <p id="generatedNumberDisplay"></p>
+</div>
+
+<div class="tables-container">
+  <table id="probabilityTable">
+    <tr>
+      <th>Цифра</th>
+      <th>Шанс</th>
+    </tr>
+    <!-- Здесь будут строки с шансами для каждой цифры -->
+  </table>
+
+  <table id="statisticsTable">
+    <tr>
+      <th>Цифра</th>
+      <th>Количество</th>
+      <th>Процент</th>
+    </tr>
+    <!-- Здесь будут строки со статистикой по каждой цифре -->
+    <tr id="totalGenerationsRow">
+      <td>Всего</td>
+      <td id="totalGenerationsCount">0</td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

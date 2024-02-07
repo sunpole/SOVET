@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- Устанавливаем кодировку документа -->
+  <meta charset="UTF-8" />
+  <!-- Определяем параметры для корректного отображения на мобильных устройствах -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <!-- Заголовок страницы -->
+  <title>Семейное собрание Магомедовых</title>
+  <!-- Стили страницы -->
+  <style>
+    /* Оформление основного контейнера страницы */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      user-select: none;
+      /* Задаем фон страницы */
+      background-image: url('1.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background 6s; /* Плавное изменение фона в течение 6 секунд */
+    }
+
+    /* Контейнер для выравнивания кнопки по центру экрана */
+    #container {
+      position: relative;
+      height: 100vh;
+    }
+
+    /* Стилизация контента */
+    #content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Стилизация кнопки */
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      z-index: 1;
+      transition: opacity 6s; /* Плавное изменение прозрачности кнопки в течение 6 секунд */
+    }
+  </style>
+</head>
+<body>
+  <!-- Основной контейнер страницы -->
+  <div id="container">
+    <!-- Контент с выравниванием по центру -->
+    <div id="content">
+      <!-- Кнопка запуска -->
+      <button id="startButton">Start</button>
+    </div>
+  </div>
+
+  <!-- Скрипт для обработки событий -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Получаем кнопку по идентификатору
+      var startButton = document.getElementById('startButton');
+      // Создаем аудио-элемент с указанием пути к файлу
+      var audio = new Audio('hola.mp3');
+
+      // Обработчик события при нажатии на кнопку
+      startButton.addEventListener('click', function () {
+        // Воспроизводим аудио, логируя ошибку при неудаче
+        audio.play().catch(function(error) {
+          console.error("Error playing audio:", error);
+        });
+
+        // Изменяем фон страницы с анимацией
+        document.body.style.background = 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,1)), url("1.jpeg")';
+        document.body.style.backgroundSize = 'cover';
+        // Запрещаем выделение текста на странице
+        document.body.style.userSelect = 'none';
+        // Уменьшаем прозрачность кнопки с анимацией
+        startButton.style.opacity = 0;
+
+        // Устанавливаем таймер для перехода на другую страницу через 6 секунд
+        setTimeout(function () {
+          // Переходим на другую страницу
+          window.location.href = 'index.html';
+        }, 6000);
+      });
+
+      // Обработчик события при завершении воспроизведения аудио
+      audio.addEventListener('ended', function() {
+        console.log('Аудиофайл воспроизведен до конца.');
+      });
+    });
+  </script>
+</body>
+</html>

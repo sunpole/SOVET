@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Probability Generator</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 50%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<button onclick="generateAndDisplay()">Generate Dice Roll</button>
+
+<p>Generated Number: <span id="generatedNumber"></span></p>
+
+<table id="probabilityTable">
+  <tr>
+    <th>Dice Number</th>
+    <th>Probability</th>
+  </tr>
+</table>
+
+<h3>Roll Statistics</h3>
+
+<table id="statisticsTable">
+  <tr>
+    <th>Dice Number</th>
+    <th>Count</th>
+    <th>Percentage</th>
+  </tr>
+</table>
+
+<script>
+let currentDiceValue;
+let rollCount = Array(6).fill(0);
+
+function generateAndDisplay() {
+  let generatedNumber = document.getElementById("generatedNumber");
+  let probabilityTable = document.getElementById("probabilityTable");
+  let statisticsTable = document.getElementById("statisticsTable");
+
+  let randomNum;
+  let consecutiveCount = 0;
+
+  function generateProbabilities() {
+    // Sample probabilities (replace with your logic)
+    let probabilities = [0.05, 0.3, 0.6, 0.4, 0.6, 0.05];
+    return probabilities;
+  }
+
+  do {
+    let chance = Math.random();
+    
+    if (consecutiveCount === 3) {
+      // Reset consecutive count if three consecutive repeats
+      consecutiveCount = 0;
+    } else if (consecutiveCount > 0 && chance <= 0.03) {
+      // 3% chance of repeating the number consecutively
+      consecutiveCount++;
+    } else if (chance <= 0.01) {
+      // 1% chance of repeating the number three times consecutively
+      consecutiveCount = 1;
+    } else {
+      // Reset consecutive count otherwise
+      consecutiveCount = 0;
+    }
+
+    let probabilities = generateProbabilities();
+    let cumulativeProbability = 0;
+
+    for (let i = 1; i <= 6; i++) {
+      cumulativeProbability += probabilities[i - 1];
+      
+      if (chance <= cumulativeProbability) {
+        randomNum = i;
+        break;
+      }
+    }
+
+  } while (randomNum === currentDiceValue);
+
+  currentDiceValue = randomNum;
+
+  // Display the generated number
+  generatedNumber.textContent = currentDiceValue;
+
+  // Update the probability table
+  probabilityTable.innerHTML = "<tr><th>Dice Number</th><th>Probability</th></tr>";
+
+  for (let i = 1; i <= 6; i++) {
+    let row = probabilityTable.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    cell1.innerHTML = i;
+    cell2.innerHTML = generateProbabilities()[i - 1].toFixed(4);
+  }
+
+  // Update the statistics table
+  rollCount[currentDiceValue - 1]++;
+  statisticsTable.innerHTML = "<tr><th>Dice Number</th><th>Count</th><th>Percentage</th></tr>";
+
+  for (let i = 1; i <= 6; i++) {
+    let row = statisticsTable.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    let cell3 = row.insertCell(2);
+
+    cell1.innerHTML = i;
+    cell2.innerHTML = rollCount[i - 1];
+    cell3.innerHTML = ((rollCount[i - 1] / rollCount.reduce((a, b) => a + b, 0)) * 100).toFixed(4) + "%";
+  }
+}
+</script>
+
+</body>
+</html>

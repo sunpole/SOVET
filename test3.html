@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генерация и статистика</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="error-display"></div>
+    <button onclick="generateAndCollectStats(1000)">Генерировать и Собрать Статистику (1000)</button>
+    <button onclick="generateAndCollectStats(10000)">Генерировать и Собрать Статистику (10000)</button>
+    <button onclick="generateAndCollectStats(100000)">Генерировать и Собрать Статистику (100000)</button>
+    <button onclick="generateAndCollectStats(1000000)">Генерировать и Собрать Статистику (1000000)</button>
+
+    <div id="result"></div>
+
+    <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            const errorDisplay = document.getElementById('error-display');
+            const errorMessage = `<p>Error: ${message}</p>
+                               <p>Source: ${source}</p>
+                               <p>Line: ${lineno}, Column: ${colno}</p>`;
+            errorDisplay.innerHTML = errorMessage;
+            return true;
+        };
+
+        let prevNumber = null;
+        let consecutivePairs = 0;
+        let consecutiveTriples = 0;
+
+        function generateNumbers(numberOfGenerations, customLogic) {
+            const statistics = {};
+
+            for (let i = 0; i < numberOfGenerations; i++) {
+                let generatedNumber = customLogic();
+                statistics[generatedNumber] = (statistics[generatedNumber] || 0) + 1;
+
+                // Проверка на повторяющиеся пары подряд
+                if (generatedNumber === prevNumber) {
+                    consecutivePairs++;
+                } else {
+                    consecutivePairs = 0;
+                }
+
+                // Проверка на повторяющиеся тройки подряд
+                if (generatedNumber === prevNumber && consecutivePairs === 1) {
+                    consecutiveTriples++;
+                } else {
+                    consecutiveTriples = 0;
+                }
+
+                // Обновление предыдущего числа
+                prevNumber = generatedNumber;
+            }
+
+            return {
+                statistics,
+                consecutivePairs,
+                consecutiveTriples,
+            };
+        }
+
+        function customLogic() {
+    const randomValue = Math.random();
+
+    // Генерация двойных чисел в подряд
+    if (randomValue >= 0.999000 && randomValue <= 0.999999) {
+        return Math.floor(Math.random() * (1555 - 555 + 1)) + 555;
+    }
+
+    // Генерация тройных чисел в подряд
+    if (randomValue >= 0.998000 && randomValue < 0.999000) {
+        return Math.floor(Math.random() * (444 - 111 + 1)) + 111;
+    }
+
+    // Генерация четверных чисел в подряд
+    if (randomValue >= 0.997000 && randomValue < 0.998000) {
+        return Math.floor(Math.random() * 26);
+    }
+
+    // Генерация чисел от 1 до 6 с учетом процентов и вариации
+    const percentages = [11, 15, 23, 27, 14, 10];
+    let totalPercentage = 0;
+
+    for (let i = 0; i < percentages.length; i++) {
+        totalPercentage += percentages[i];
+
+        if (randomValue < totalPercentage / 100) {
+            // Добавление случайности в виде 10% вариации
+            const variation = Math.floor(Math.random() * 2) === 0 ? -0.05 : 0.05;
+            return i + 1 + Math.floor(Math.random() * (variation * (i + 1) * 6 + 1));
+        }
+    }
+
+    // По умолчанию возвращаем случайное число от 1 до 6
+    return Math.floor(Math.random() * 6) + 1;
+}
+
+
+function countConsecutiveRepeats(length, statistics) {
+    let consecutiveRepeats = 0;
+    let currentConsecutiveCount = 0;
+
+    for (let i = 1; i <= 6; i++) {
+        if (statistics[i] > 0) {
+            currentConsecutiveCount++;
+            if (currentConsecutiveCount === length) {
+                consecutiveRepeats++;
+                currentConsecutiveCount = 0; // Сбросим счетчик
+            }
+        } else {
+            currentConsecutiveCount = 0; // Если число не повторяется, сбросим счетчик
+        }
+    }
+
+    return consecutiveRepeats;
+}
+
+
+
+function generateAndCollectStats(numberOfGenerations) {
+    try {
+        const {
+            statistics,
+            consecutivePairs,
+            consecutiveTriples
+        } = generateNumbers(numberOfGenerations, customLogic);
+        const resultDisplay = document.getElementById('result');
+
+        // Преобразование статистики в таблицу
+        const table = document.createElement('table');
+        const headerRow = table.insertRow();
+        const headerCell1 = headerRow.insertCell(0);
+        const headerCell2 = headerRow.insertCell(1);
+        headerCell1.innerHTML = 'Число';
+        headerCell2.innerHTML = 'Количество';
+
+        let totalGenerations = 0;
+
+        for (let i = 1; i <= 6; i++) {
+            const count = statistics[i] || 0;
+            const row = table.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            cell1.innerHTML = i;
+            cell2.innerHTML = count;
+            totalGenerations += count;
+        }
+
+        // Добавление седьмой строки с суммарным количеством генераций
+        const totalRow = table.insertRow();
+        const totalCell1 = totalRow.insertCell(0);
+        const totalCell2 = totalRow.insertCell(1);
+        totalCell1.innerHTML = 'Итого';
+        totalCell2.innerHTML = totalGenerations;
+
+        // Добавление восьмой строки с процентным составлением каждого числа
+        const percentagesRow = table.insertRow();
+        const percentagesCell1 = percentagesRow.insertCell(0);
+        const percentagesCell2 = percentagesRow.insertCell(1);
+        percentagesCell1.innerHTML = 'Проценты';
+
+        for (let i = 1; i <= 6; i++) {
+            const percentage = ((statistics[i] || 0) / totalGenerations * 100).toFixed(2);
+            percentagesCell2.innerHTML += `Процент ${i}: ${percentage}%<br>`;
+        }
+
+        // Добавление дополнительных строк с информацией о повторяющихся парах, тройках и четверках
+        appendInfoRow('Повторяющиеся пары подряд', consecutivePairs);
+        appendInfoRow('Повторяющиеся тройки подряд', consecutiveTriples);
+        appendInfoRow('Повторяющиеся четверки подряд', countConsecutiveRepeats(4, statistics));
+
+        // Функция для добавления строки с информацией
+        function appendInfoRow(label, value) {
+            const infoRow = table.insertRow();
+            const infoCell1 = infoRow.insertCell(0);
+            const infoCell2 = infoRow.insertCell(1);
+            infoCell1.innerHTML = label;
+            infoCell2.innerHTML = value;
+        }
+
+        resultDisplay.innerHTML = ''; // Очистка предыдущего содержимого
+        resultDisplay.appendChild(table);
+    } catch (error) {
+        console.error('An error occurred:', error);
+        console.trace(); // Добавим трассировку стека
+    }
+}
+
+
+    </script>
+
+</body>
+
+</html>
